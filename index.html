@@ -459,6 +459,144 @@ function escapeAttribute(text) {
 render();
 
 </script>
+  
+<!-- 🗺️ 旅行マップ -->
+<div id="travelMapArea" style="margin:20px 0;">
+  <div style="background:white;border-radius:18px;padding:18px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+    <h2 style="margin:0 0 12px;">🗺️ 旅行マップ</h2>
+    <p style="font-size:13px;color:#888;margin-top:0;">
+      登録した場所を地図で確認できます
+    </p>
+    <div id="travelMap" style="height:420px;border-radius:14px;overflow:hidden;"></div>
+  </div>
+</div>
 
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+(function() {
+
+  const mapCenters = {
+    "ブリュッセル": [50.8466, 4.3528],
+    "パリ": [48.8566, 2.3522],
+    "ロンドン": [51.5074, -0.1278]
+  };
+
+  let map;
+
+  function createTravelMap() {
+
+    if (map) {
+      map.remove();
+    }
+
+    const city =
+      typeof currentCity !== "undefined"
+        ? currentCity
+        : "ブリュッセル";
+
+    const center =
+      mapCenters[city] || mapCenters["ブリュッセル"];
+
+    map = L.map("travelMap").setView(center, 13);
+
+    L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution:
+          '&copy; OpenStreetMap contributors'
+      }
+    ).addTo(map);
+
+    const savedPlaces =
+      JSON.parse(
+        localStorage.getItem("europeTripPlaces") || "[]"
+      );
+
+    const cityPlaces =
+      savedPlaces.filter(function(place) {
+        return place.city === city;
+      });
+
+    if (cityPlaces.length === 0) {
+
+      L.marker(center)
+        .addTo(map)
+        .bindPopup(
+          "📍 " + city + "<br>まだ登録した場所がないよ！"
+        );
+
+      return;
+    }
+
+    cityPlaces.forEach(function(place) {
+
+      const searchText =
+        place.address || place.name;
+
+      fetch(
+        "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
+        encodeURIComponent(searchText + ", " + city)
+      )
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+
+        if (!data || !data.length) return;
+
+        const lat = parseFloat(data[0].lat);
+        const lon = parseFloat(data[0].lon);
+
+        const icon =
+          place.category === "レストラン" ? "🍴" :
+          place.category === "カフェ" ? "☕" :
+          place.category === "ショップ" ? "🛍️" :
+          "📍";
+
+        L.marker([lat, lon])
+          .addTo(map)
+          .bindPopup(
+            "<strong>" +
+            icon + " " +
+            escapeHtml(place.name) +
+            "</strong><br>" +
+            escapeHtml(place.category) +
+            (place.memo
+              ? "<br>📝 " + escapeHtml(place.memo)
+              : "") +
+            "<br><br>" +
+            '<a href="https://www.google.com/maps/search/?api=1&query=' +
+            encodeURIComponent(
+              place.address || place.name
+            ) +
+            '" target="_blank">Google Mapsで開く →</a>'
+          );
+      })
+      .catch(function() {});
+    });
+  }
+
+  function escapeHtml(text) {
+    return String(text || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  setTimeout(createTravelMap, 500);
+
+  window.updateTravelMap = createTravelMap;
+
+})();
+</script>
+  
 </body>
 </html>
