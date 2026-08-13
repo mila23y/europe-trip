@@ -1,178 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Europe Trip 🇪🇺</title>
 
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
-               "Yu Gothic", sans-serif;
-  background: #f8f6f2;
-  color: #333;
-}
-
-header {
-  background: white;
-  padding: 28px 20px 20px;
-  border-bottom: 1px solid #eee;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 25px;
-}
-
-header p {
-  margin: 6px 0 0;
-  color: #888;
-  font-size: 13px;
-}
-
-.container {
-  max-width: 700px;
-  margin: auto;
-  padding: 18px;
-}
-
-.cities {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 12px;
-}
-
-.city {
-  border: none;
-  background: white;
-  border-radius: 20px;
-  padding: 10px 16px;
-  white-space: nowrap;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,.05);
-}
-
-.city.active {
-  background: #333;
-  color: white;
-}
-
-.card {
-  background: white;
-  border-radius: 18px;
-  padding: 18px;
-  margin-bottom: 14px;
-  box-shadow: 0 3px 12px rgba(0,0,0,.05);
-}
-
-.card h2 {
-  margin-top: 0;
-  font-size: 19px;
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 6px 0;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 15px;
-  background: white;
-}
-
-textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-button {
-  cursor: pointer;
-}
-
-.add-button {
-  width: 100%;
-  border: none;
-  background: #333;
-  color: white;
-  padding: 13px;
-  border-radius: 12px;
-  margin-top: 8px;
-  font-size: 15px;
-}
-
-.place {
-  border-top: 1px solid #eee;
-  padding: 16px 0;
-}
-
-.place:first-child {
-  border-top: none;
-}
-
-.place-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.place-title strong {
-  font-size: 17px;
-}
-
-.badge {
-  font-size: 11px;
-  background: #eee;
-  padding: 5px 8px;
-  border-radius: 10px;
-}
-
-.place-info {
-  color: #777;
-  font-size: 13px;
-  margin: 7px 0;
-}
-
-.actions {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-}
-
-.actions button {
-  border: 1px solid #ddd;
-  background: white;
-  padding: 7px 10px;
-  border-radius: 9px;
-  font-size: 12px;
-}
-
-.actions button:hover {
-  background: #f5f5f5;
-}
-
-.done {
-  opacity: .5;
-}
-
-.done strong {
-  text-decoration: line-through;
-}
-
-.empty {
-  color: #999;
-  text-align: center;
-  padding: 20px;
-}
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 
 .trip-info {
   display: grid;
@@ -194,6 +31,24 @@ button {
   font-size: 20px;
   margin-bottom: 4px;
 }
+
+#map {
+  width: 100%;
+  height: 350px;
+  border-radius: 14px;
+.done {
+  opacity: .5;
+}
+
+.done strong {
+  text-decoration: line-through;
+}
+
+.empty {
+  color: #999;
+  text-align: center;
+  padding: 20px;
+}
 </style>
 </head>
 
@@ -207,67 +62,15 @@ button {
 <div class="container">
 
   <div class="trip-info">
+
     <div class="trip-box">
       <span>🇧🇪</span>
-      ブリュッセル<br>12/25~12/26
-    </div>
+      ブリュッセル<br>
+      12/25〜12/26
+    <h2>🗺️ 旅行マップ</h2>
 
-    <div class="trip-box">
-      <span>🇫🇷</span>
-      パリ<br>12/26〜12/30
-    </div>
-
-    <div class="trip-box">
-      <span>🇬🇧</span>
-      ロンドン<br>12/30〜1/2
-    </div>
-  </div>
-
-  <div class="cities">
-    <button class="city active" onclick="selectCity('ブリュッセル', this)">🇧🇪 ブリュッセル</button>
-    <button class="city" onclick="selectCity('パリ', this)">🇫🇷 パリ</button>
-    <button class="city" onclick="selectCity('ロンドン', this)">🇬🇧 ロンドン</button>
-  </div>
-
-  <div class="card">
-  <h2>🗺️ 旅行マップ</h2>
-  <div id="map" style="height:350px; border-radius:14px;"></div>
-</div>
-  
-  <div class="card">
-    <h2>📍 行きたい場所を追加</h2>
-
-    <input id="name" placeholder="場所の名前（例：エッフェル塔）">
-
-    <select id="category">
-      <option>観光スポット</option>
-      <option>レストラン</option>
-      <option>カフェ</option>
-      <option>ショップ</option>
-      <option>ホテル</option>
-      <option>その他</option>
-    </select>
-
-    <input id="date" type="date">
-
-    <input id="address" placeholder="住所・場所">
-
-    <input id="travel" placeholder="次の場所までの移動時間（例：徒歩20分）">
-
-    <textarea id="memo" placeholder="メモ"></textarea>
-
-    <button class="add-button" onclick="addPlace()">
-      ＋ この場所を登録
-    </button>
-  </div>
-
-  <div class="card">
-    <h2 id="cityTitle">🇧🇪 ブリュッセルの行きたい場所</h2>
-
-    <div id="places"></div>
-  </div>
-
-</div>
+    <div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 
@@ -277,108 +80,153 @@ let places = JSON.parse(
   localStorage.getItem("europeTripPlaces") || "[]"
 );
 
-function save() {
-  localStorage.setItem(
-    "europeTripPlaces",
-    JSON.stringify(places)
-  );
-}
+
+/* 都市の位置 */
+
+const cityCoords = {
+
+  "ブリュッセル": [50.8503, 4.3517],
+
+  "パリ": [48.8566, 2.3522],
+
+  "ロンドン": [51.5074, -0.1278]
+
+};
+
+
+/* 地図を作成 */
+
+const map = L.map("map").setView(
+  cityCoords["ブリュッセル"],
+  6
+);
+
+
+L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    attribution: "© OpenStreetMap contributors"
+  }
+).addTo(map);
+
+
+/* 都市変更 */
 
 function selectCity(city, button) {
+
   currentCity = city;
 
-  document.querySelectorAll(".city")
+  document
+    .querySelectorAll(".city")
     .forEach(b => b.classList.remove("active"));
 
   button.classList.add("active");
 
-  document.getElementById("map").src =
-  "https://www.google.com/maps?q=Brussels&output=embed";
 
-  if (cityCoords[city]) {
-  map.setView(cityCoords[city], 6);
-}
-  
-render();
-}
+  /* 地図を移動 */
 
+  map.setView(
+    cityCoords[city],
+    6
+  );
 
-function addPlace() {
-
-  const name = document.getElementById("name").value.trim();
-
-  if (!name) {
-    alert("場所の名前を入力してね！");
-    return;
-  }
-
-  const place = {
-    id: Date.now(),
-    city: currentCity,
-    name: name,
-    category: document.getElementById("category").value,
-    date: document.getElementById("date").value,
-    address: document.getElementById("address").value,
-    travel: document.getElementById("travel").value,
-    memo: document.getElementById("memo").value,
-    done: false
-  };
-
-  places.push(place);
-
-  save();
-
-  document.getElementById("name").value = "";
-  document.getElementById("date").value = "";
-  document.getElementById("address").value = "";
-  document.getElementById("travel").value = "";
-  document.getElementById("memo").value = "";
 
   render();
+
 }
+
+
+/* 保存 */
+
+function save() {
+
+  localStorage.setItem(
+    "europeTripPlaces",
+    JSON.stringify(places)
+  );
+
+}
+
+
+/* 場所を追加 */
+/* 行った！ */
 
 function toggleDone(id) {
 
-  const place = places.find(p => p.id === id);
+  const place =
+    places.find(p => p.id === id);
+
 
   if (place) {
+
     place.done = !place.done;
+
     save();
+
     render();
+
   }
+
 }
+
+
+/* 削除 */
 
 function deletePlace(id) {
 
-  if (!confirm("この場所を削除する？")) return;
+  if (!confirm("この場所を削除する？")) {
+    return;
+  }
 
-  places = places.filter(p => p.id !== id);
+
+  places =
+    places.filter(p => p.id !== id);
 
   save();
+
   render();
+
 }
+
+
+/* Googleマップ */
 
 function openMap(address, name) {
 
-  const query = address || name;
+  const query =
+    address || name;
+
 
   const url =
     "https://www.google.com/maps/search/?api=1&query=" +
     encodeURIComponent(query);
 
+
   window.open(url, "_blank");
+
 }
+
+
+/* 表示 */
 
 function render() {
 
   const cityPlaces =
-    places.filter(p => p.city === currentCity);
+    places.filter(
+      p => p.city === currentCity
+    );
+
 
   const flags = {
+
     "ブリュッセル": "🇧🇪",
+
     "パリ": "🇫🇷",
+
     "ロンドン": "🇬🇧"
+
   };
+
 
   document.getElementById("cityTitle").textContent =
     flags[currentCity] +
@@ -386,242 +234,55 @@ function render() {
     currentCity +
     "の行きたい場所";
 
+
   const container =
     document.getElementById("places");
+
 
   if (cityPlaces.length === 0) {
 
     container.innerHTML =
-      '<div class="empty">まだ登録されてないよ📍<br>気になる場所を追加してみよう！</div>';
-
-    return;
-  }
-
-  container.innerHTML =
-    cityPlaces.map(place => `
-
-      <div class="place ${place.done ? "done" : ""}">
-
-        <div class="place-title">
-          <strong>${escapeHtml(place.name)}</strong>
-          <span class="badge">${escapeHtml(place.category)}</span>
-        </div>
-
-        ${
-          place.date
-          ? `<div class="place-info">📅 ${place.date}</div>`
-          : ""
-        }
-
-        ${
-          place.address
-          ? `<div class="place-info">📍 ${escapeHtml(place.address)}</div>`
-          : ""
-        }
-
-        ${
-          place.travel
-          ? `<div class="place-info">🚶 次の場所まで：${escapeHtml(place.travel)}</div>`
-          : ""
-        }
-
-        ${
-          place.memo
-          ? `<div class="place-info">📝 ${escapeHtml(place.memo)}</div>`
-          : ""
-        }
-
-        <div class="actions">
-
-          <button onclick="toggleDone(${place.id})">
-            ${place.done ? "↩️ 行きたいに戻す" : "☑️ 行った！"}
-          </button>
-
-          <button onclick="openMap('${escapeAttribute(place.address)}','${escapeAttribute(place.name)}')">
-            🗺️ 地図で見る
-          </button>
-
-          <button onclick="deletePlace(${place.id})">
-            🗑️ 削除
-          </button>
-
-        </div>
-
-      </div>
-
-    `).join("");
-}
+      '<div class="empty">' +
+      'まだ登録されてないよ📍<br>' +
+      '気になる場所を追加してみよう！' +
+      '</div>';
+/* HTMLを安全に表示 */
 
 function escapeHtml(text) {
 
   return String(text)
+
     .replace(/&/g, "&amp;")
+
     .replace(/</g, "&lt;")
+
     .replace(/>/g, "&gt;")
+
     .replace(/"/g, "&quot;")
+
     .replace(/'/g, "&#039;");
+
 }
+
+
+/* 属性を安全に表示 */
 
 function escapeAttribute(text) {
 
   return String(text || "")
+
     .replace(/\\/g, "\\\\")
+
     .replace(/'/g, "\\'");
+
 }
-const map = L.map("map").setView([50.8503, 4.3517], 6);
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: "© OpenStreetMap contributors"
-}).addTo(map);
 
-const cityCoords = {
-  "ブリュッセル": [50.8503, 4.3517],
-  "パリ": [48.8566, 2.3522],
-  "ロンドン": [51.5074, -0.1278]
-};
+/* 最初に表示 */
 
 render();
 
 </script>
-  
-<!-- 🗺️ 旅行マップ -->
-<div id="travelMapArea" style="margin:20px 0;">
-  <div style="background:white;border-radius:18px;padding:18px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
-    <h2 style="margin:0 0 12px;">🗺️ 旅行マップ</h2>
-    <p style="font-size:13px;color:#888;margin-top:0;">
-      登録した場所を地図で確認できます
-    </p>
-    <div id="travelMap" style="height:420px;border-radius:14px;overflow:hidden;"></div>
-  </div>
-</div>
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<script>
-(function() {
-
-  const mapCenters = {
-    "ブリュッセル": [50.8466, 4.3528],
-    "パリ": [48.8566, 2.3522],
-    "ロンドン": [51.5074, -0.1278]
-  };
-
-  let map;
-
-  function createTravelMap() {
-
-    if (map) {
-      map.remove();
-    }
-
-    const city =
-      typeof currentCity !== "undefined"
-        ? currentCity
-        : "ブリュッセル";
-
-    const center =
-      mapCenters[city] || mapCenters["ブリュッセル"];
-
-    map = L.map("travelMap").setView(center, 13);
-
-    L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      {
-        attribution:
-          '&copy; OpenStreetMap contributors'
-      }
-    ).addTo(map);
-
-    const savedPlaces =
-      JSON.parse(
-        localStorage.getItem("europeTripPlaces") || "[]"
-      );
-
-    const cityPlaces =
-      savedPlaces.filter(function(place) {
-        return place.city === city;
-      });
-
-    if (cityPlaces.length === 0) {
-
-      L.marker(center)
-        .addTo(map)
-        .bindPopup(
-          "📍 " + city + "<br>まだ登録した場所がないよ！"
-        );
-
-      return;
-    }
-
-    cityPlaces.forEach(function(place) {
-
-      const searchText =
-        place.address || place.name;
-
-      fetch(
-        "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
-        encodeURIComponent(searchText + ", " + city)
-      )
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-
-        if (!data || !data.length) return;
-
-        const lat = parseFloat(data[0].lat);
-        const lon = parseFloat(data[0].lon);
-
-        const icon =
-          place.category === "レストラン" ? "🍴" :
-          place.category === "カフェ" ? "☕" :
-          place.category === "ショップ" ? "🛍️" :
-          "📍";
-
-        L.marker([lat, lon])
-          .addTo(map)
-          .bindPopup(
-            "<strong>" +
-            icon + " " +
-            escapeHtml(place.name) +
-            "</strong><br>" +
-            escapeHtml(place.category) +
-            (place.memo
-              ? "<br>📝 " + escapeHtml(place.memo)
-              : "") +
-            "<br><br>" +
-            '<a href="https://www.google.com/maps/search/?api=1&query=' +
-            encodeURIComponent(
-              place.address || place.name
-            ) +
-            '" target="_blank">Google Mapsで開く →</a>'
-          );
-      })
-      .catch(function() {});
-    });
-  }
-
-  function escapeHtml(text) {
-    return String(text || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  setTimeout(createTravelMap, 500);
-
-  window.updateTravelMap = createTravelMap;
-
-})();
-</script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  
 </body>
 </html>
