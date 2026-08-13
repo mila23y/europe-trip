@@ -208,17 +208,17 @@ button {
   <div class="trip-info">
     <div class="trip-box">
       <span>🇧🇪</span>
-      ブリュッセル<br>8/26
+      ブリュッセル<br>12/25~12/26
     </div>
 
     <div class="trip-box">
       <span>🇫🇷</span>
-      パリ<br>8/27〜8/29
+      パリ<br>12/26〜12/30
     </div>
 
     <div class="trip-box">
       <span>🇬🇧</span>
-      ロンドン<br>8/30〜9/1
+      ロンドン<br>12/30〜1/2
     </div>
   </div>
 
@@ -227,7 +227,18 @@ button {
     <button class="city" onclick="selectCity('パリ', this)">🇫🇷 パリ</button>
     <button class="city" onclick="selectCity('ロンドン', this)">🇬🇧 ロンドン</button>
   </div>
-
+  
+<div class="card">
+  <h2>🗺️ 地図</h2>
+  <iframe
+    id="map"
+    width="100%"
+    height="300"
+    style="border:0; border-radius:14px;"
+    loading="lazy">
+  </iframe>
+</div>
+  
   <div class="card">
     <h2>📍 行きたい場所を追加</h2>
 
@@ -279,7 +290,6 @@ function save() {
 }
 
 function selectCity(city, button) {
-
   currentCity = city;
 
   document.querySelectorAll(".city")
@@ -287,8 +297,20 @@ function selectCity(city, button) {
 
   button.classList.add("active");
 
-  render();
+  const maps = {
+    "ブリュッセル": "https://www.google.com/maps?q=Brussels&output=embed",
+    "パリ": "https://www.google.com/maps?q=Paris&output=embed",
+    "ロンドン": "https://www.google.com/maps?q=London&output=embed"
+  };
+
+  document.getElementById("map").src = maps[city];
+
+  document.getElementById("map").src =
+  "https://www.google.com/maps?q=Brussels&output=embed";
+
+render();
 }
+
 
 function addPlace() {
 
