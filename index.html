@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europe Trip 🇪🇺</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+               "Yu Gothic", sans-serif;
+  background: #f8f6f2;
+  color: #333;
+}
+
+header {
+  background: white;
+  padding: 28px 20px 20px;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 25px;
+}
+
+header p {
+  margin: 6px 0 0;
+  color: #888;
+  font-size: 13px;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+  padding: 18px;
+}
+
+.cities {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.city {
+  border: none;
+  background: white;
+  border-radius: 20px;
+  padding: 10px 16px;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+}
+
+.city.active {
+  background: #333;
+  color: white;
+}
+
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 19px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  background: white;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+button {
+  cursor: pointer;
+}
+
+.add-button {
+  width: 100%;
+  border: none;
+  background: #333;
+  color: white;
+  padding: 13px;
+  border-radius: 12px;
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+.place {
+  border-top: 1px solid #eee;
+  padding: 16px 0;
+}
+
+.place:first-child {
+  border-top: none;
+}
+
+.place-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.place-title strong {
+  font-size: 17px;
+}
+
+.badge {
+  font-size: 11px;
+  background: #eee;
+  padding: 5px 8px;
+  border-radius: 10px;
+}
+
+.place-info {
+  color: #777;
+  font-size: 13px;
+  margin: 7px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.actions button {
+  border: 1px solid #ddd;
+  background: white;
+  padding: 7px 10px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.actions button:hover {
+  background: #f5f5f5;
+}
+
+.done {
+  opacity: .5;
+}
+
+.done strong {
+  text-decoration: line-through;
+}
+
+.empty {
+  color: #999;
+  text-align: center;
+  padding: 20px;
+}
+
+.trip-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.trip-box {
+  background: white;
+  border-radius: 14px;
+  padding: 13px 8px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.trip-box span {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Europe Trip 🇪🇺</h1>
+  <p>Brussels → Paris → London</p>
+</header>
+
+<div class="container">
+
+  <div class="trip-info">
+    <div class="trip-box">
+      <span>🇧🇪</span>
+      ブリュッセル<br>8/26
+    </div>
+
+    <div class="trip-box">
+      <span>🇫🇷</span>
+      パリ<br>8/27〜8/29
+    </div>
+
+    <div class="trip-box">
+      <span>🇬🇧</span>
+      ロンドン<br>8/30〜9/1
+    </div>
+  </div>
+
+  <div class="cities">
+    <button class="city active" onclick="selectCity('ブリュッセル', this)">🇧🇪 ブリュッセル</button>
+    <button class="city" onclick="selectCity('パリ', this)">🇫🇷 パリ</button>
+    <button class="city" onclick="selectCity('ロンドン', this)">🇬🇧 ロンドン</button>
+  </div>
+
+  <div class="card">
+    <h2>📍 行きたい場所を追加</h2>
+
+    <input id="name" placeholder="場所の名前（例：エッフェル塔）">
+
+    <select id="category">
+      <option>観光スポット</option>
+      <option>レストラン</option>
+      <option>カフェ</option>
+      <option>ショップ</option>
+      <option>ホテル</option>
+      <option>その他</option>
+    </select>
+
+    <input id="date" type="date">
+
+    <input id="address" placeholder="住所・場所">
+
+    <input id="travel" placeholder="次の場所までの移動時間（例：徒歩20分）">
+
+    <textarea id="memo" placeholder="メモ"></textarea>
+
+    <button class="add-button" onclick="addPlace()">
+      ＋ この場所を登録
+    </button>
+  </div>
+
+  <div class="card">
+    <h2 id="cityTitle">🇧🇪 ブリュッセルの行きたい場所</h2>
+
+    <div id="places"></div>
+  </div>
+
+</div>
+
+<script>
+
+let currentCity = "ブリュッセル";
+
+let places = JSON.parse(
+  localStorage.getItem("europeTripPlaces") || "[]"
+);
+
+function save() {
+  localStorage.setItem(
+    "europeTripPlaces",
+    JSON.stringify(places)
+  );
+}
+
+function selectCity(city, button) {
+
+  currentCity = city;
+
+  document.querySelectorAll(".city")
+    .forEach(b => b.classList.remove("active"));
+
+  button.classList.add("active");
+
+  render();
+}
+
+function addPlace() {
+
+  const name = document.getElementById("name").value.trim();
+
+  if (!name) {
+    alert("場所の名前を入力してね！");
+    return;
+  }
+
+  const place = {
+    id: Date.now(),
+    city: currentCity,
+    name: name,
+    category: document.getElementById("category").value,
+    date: document.getElementById("date").value,
+    address: document.getElementById("address").value,
+    travel: document.getElementById("travel").value,
+    memo: document.getElementById("memo").value,
+    done: false
+  };
+
+  places.push(place);
+
+  save();
+
+  document.getElementById("name").value = "";
+  document.getElementById("date").value = "";
+  document.getElementById("address").value = "";
+  document.getElementById("travel").value = "";
+  document.getElementById("memo").value = "";
+
+  render();
+}
+
+function toggleDone(id) {
+
+  const place = places.find(p => p.id === id);
+
+  if (place) {
+    place.done = !place.done;
+    save();
+    render();
+  }
+}
+
+function deletePlace(id) {
+
+  if (!confirm("この場所を削除する？")) return;
+
+  places = places.filter(p => p.id !== id);
+
+  save();
+  render();
+}
+
+function openMap(address, name) {
+
+  const query = address || name;
+
+  const url =
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(query);
+
+  window.open(url, "_blank");
+}
+
+function render() {
+
+  const cityPlaces =
+    places.filter(p => p.city === currentCity);
+
+  const flags = {
+    "ブリュッセル": "🇧🇪",
+    "パリ": "🇫🇷",
+    "ロンドン": "🇬🇧"
+  };
+
+  document.getElementById("cityTitle").textContent =
+    flags[currentCity] +
+    " " +
+    currentCity +
+    "の行きたい場所";
+
+  const container =
+    document.getElementById("places");
+
+  if (cityPlaces.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">まだ登録されてないよ📍<br>気になる場所を追加してみよう！</div>';
+
+    return;
+  }
+
+  container.innerHTML =
+    cityPlaces.map(place => `
+
+      <div class="place ${place.done ? "done" : ""}">
+
+        <div class="place-title">
+          <strong>${escapeHtml(place.name)}</strong>
+          <span class="badge">${escapeHtml(place.category)}</span>
+        </div>
+
+        ${
+          place.date
+          ? `<div class="place-info">📅 ${place.date}</div>`
+          : ""
+        }
+
+        ${
+          place.address
+          ? `<div class="place-info">📍 ${escapeHtml(place.address)}</div>`
+          : ""
+        }
+
+        ${
+          place.travel
+          ? `<div class="place-info">🚶 次の場所まで：${escapeHtml(place.travel)}</div>`
+          : ""
+        }
+
+        ${
+          place.memo
+          ? `<div class="place-info">📝 ${escapeHtml(place.memo)}</div>`
+          : ""
+        }
+
+        <div class="actions">
+
+          <button onclick="toggleDone(${place.id})">
+            ${place.done ? "↩️ 行きたいに戻す" : "☑️ 行った！"}
+          </button>
+
+          <button onclick="openMap('${escapeAttribute(place.address)}','${escapeAttribute(place.name)}')">
+            🗺️ 地図で見る
+          </button>
+
+          <button onclick="deletePlace(${place.id})">
+            🗑️ 削除
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+}
+
+function escapeHtml(text) {
+
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function escapeAttribute(text) {
+
+  return String(text || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'");
+}
+
+render();
+
+</script>
+
+</body>
+</html>
